@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎂</title>
+    <style>
+        :root {
+            --primary-pink: #ff6b6b;
+            --soft-gold: #ffd700;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden; /* Mencegah scroll karena emoji melayang */
+            position: relative;
+        }
+
+        /* --- BACKGROUND EMOJI BERGERAK --- */
+        .bg-emoji {
+            position: fixed;
+            top: -10%;
+            z-index: 1;
+            font-size: 24px;
+            user-select: none;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- KONTEN UTAMA --- */
+        #container {
+            position: relative;
+            z-index: 10; /* Agar di atas emoji */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #main-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-width: 450px;
+            width: 85%;
+        }
+
+        .gift-box {
+            font-size: 80px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+        }
+
+        .gift-box:active { transform: scale(0.9); }
+
+        .hidden { display: none; }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .photo-gallery img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid var(--soft-gold);
+        }
+
+        h1 { color: var(--primary-pink); margin-bottom: 10px; }
+        .btn-reset {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="emoji-container"></div>
+
+    <div id="container">
+        <div id="game-section">
+            <h2 style="color: #444;">Ketuk Kado 5x Untuk Membuka!</h2>
+            <div id="gift" class="gift-box" onclick="tapGift()">🎁</div>
+            <p id="counter" style="font-weight: bold; color: #777;">Sisa Ketukan: 5</p>
+        </div>
+
+        <div id="main-card" class="hidden">
+            <h1>HBD Sayang! 🎉</h1>
+            
+            <div class="photo-gallery">
+                <img src="foto1.jpg" alt="Foto 1">
+                <img src="foto2.jpg" alt="Foto 2">
+                <img src="foto3.jpg" alt="Foto 3">
+                <img src="foto4.jpg" alt="Foto 4">
+            </div>
+
+            <p>🎵 <b>Katy Perry - Birthday</b></p>
+            <audio id="song" controls>
+                <source src="ulangtahun.mp3" type="audio/mpeg">
+            </audio>
+
+            <p style="margin-top: 15px; font-style: italic;">"Semoga harimu seindah senyummu!"</p>
+            <button class="btn-reset" onclick="location.reload()">Buka Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Logika Game
+        let taps = 5;
+        function tapGift() {
+            taps--;
+            document.getElementById('counter').innerText = "Sisa Ketukan: " + taps;
+            if (taps <= 0) {
+                document.getElementById('game-section').classList.add('hidden');
+                document.getElementById('main-card').classList.remove('hidden');
+                document.getElementById('song').play();
+            }
+        }
+
+        // 2. Logika Latar Belakang Emoji Bergerak
+        const emojiContainer = document.getElementById('emoji-container');
+        const emojis = ['🎂', '🎈', '🎉', '✨', '🎁', '💖', '🧁'];
+
+        function createEmoji() {
+            const el = document.createElement('div');
+            el.className = 'bg-emoji';
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            // Posisi horizontal acak
+            el.style.left = Math.random() * 100 + 'vw';
+            
+            // Kecepatan acak (antara 5s sampai 10s)
+            const duration = Math.random() * 5 + 5;
+            el.style.animationDuration = duration + 's';
+            
+            // Ukuran acak
+            el.style.fontSize = Math.random() * 20 + 20 + 'px';
+            
+            emojiContainer.appendChild(el);
+
+            // Hapus emoji setelah animasi selesai agar tidak memberatkan browser
+            setTimeout(() => {
+                el.remove();
+            }, duration * 1000);
+        }
+
+        // Buat emoji baru setiap 500ms
+        setInterval(createEmoji, 500);
+    </script>
+</body>
+</html>
